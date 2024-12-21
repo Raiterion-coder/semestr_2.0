@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tetetete.client.ChatController">
+    <children>
+        <TextArea fx:id="chatArea" editable="false" prefHeight="400.0" />
+        <HBox>
+            <TextField fx:id="messageField" HBox.hgrow="ALWAYS" promptText="Enter your message" />
+            <Button fx:id="sendButton" text="Send" />
+        </HBox>
+    </children>
+</VBox>
