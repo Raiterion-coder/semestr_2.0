@@ -2,7 +2,6 @@ package org.example.tetetete.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.slf4j.impl.StaticLoggerBinder;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -13,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatServer {
     private static final Logger logger = LoggerFactory.getLogger(ChatServer.class);
     private final int port;
-    private final Map<String, ClientHandler> clients = new ConcurrentHashMap<>();
+    private final Map<String, ClientHandler> clients = new ConcurrentHashMap<>(); // Картотека подключенных клиентов
+    private final UserService userService = new UserService(); // Сервис для работы с пользователями
 
     public ChatServer(int port) {
         this.port = port;
@@ -24,7 +24,7 @@ public class ChatServer {
             logger.info("Сервер запущен на порту {}", port);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                new Thread(new ClientHandler(clientSocket, this)).start();
+                new Thread(new ClientHandler(clientSocket, this)).start(); // Запускаем обработчик для нового клиента
             }
         } catch (IOException e) {
             logger.error("Ошибка запуска сервера:", e);
@@ -84,20 +84,15 @@ public class ChatServer {
                     return;
                 }
 
-                synchronized (chatServer) {
-                    if (chatServer.clients.containsKey(username)) {
-                        writer.println("Имя пользователя уже занято. Подключение завершено.");
-                        return;
-                    }
-                    chatServer.addClient(username, this);
-                }
+                // Добавление клиента в чат
+                chatServer.addClient(username, this);
 
                 String message;
                 while ((message = reader.readLine()) != null) {
                     if (message.equalsIgnoreCase("/exit")) {
                         break;
                     }
-                    chatServer.broadcast(username + ": " + message, this);
+                    chatServer.broadcast(username + ": " + message, this); // Отправка сообщений всем подключенным пользователям
                 }
             } catch (IOException e) {
                 logger.error("Ошибка связи с клиентом:", e);

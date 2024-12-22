@@ -7,6 +7,8 @@ import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.System.out;
+
 public class ChatController {
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
@@ -31,6 +33,9 @@ public class ChatController {
                 messageField.clear(); // Очищаем поле ввода
             }
         });
+    }
+    public void sendPrivateMessage(String receiver, String message) {
+        out.println("PRIVATE " + receiver + " " + message);
     }
 
     // Метод для установки обработчика сокета
